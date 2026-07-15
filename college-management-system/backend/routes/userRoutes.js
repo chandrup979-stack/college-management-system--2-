@@ -1,0 +1,26 @@
+const express = require("express");
+const router = express.Router();
+const {
+  createStudent,
+  createFaculty,
+  getStudents,
+  getFaculty,
+  deleteStudent,
+  deleteFaculty,
+} = require("../controllers/userController");
+const { protect, authorize } = require("../middleware/authMiddleware");
+
+router
+  .route("/students")
+  .get(protect, authorize("admin", "faculty"), getStudents)
+  .post(protect, authorize("admin"), createStudent);
+
+router
+  .route("/faculty")
+  .get(protect, authorize("admin"), getFaculty)
+  .post(protect, authorize("admin"), createFaculty);
+
+router.delete("/students/:id", protect, authorize("admin"), deleteStudent);
+router.delete("/faculty/:id", protect, authorize("admin"), deleteFaculty);
+
+module.exports = router;
