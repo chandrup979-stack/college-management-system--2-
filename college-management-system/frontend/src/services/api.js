@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const baseURL = import.meta.env.VITE_API_URL || "https://college-management-system-2-joqr.onrender.com/api";
 const api = axios.create({
   baseURL,
 });
