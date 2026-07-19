@@ -13,7 +13,7 @@ const createStudent = async (req, res) => {
       department,
       rollNumber,
       course,
-      semester,
+      year,
       batch,
       parentContact,
     } = req.body;
@@ -44,7 +44,7 @@ const createStudent = async (req, res) => {
       user: user._id,
       rollNumber,
       course,
-      semester,
+      year,
       batch,
       parentContact,
     });

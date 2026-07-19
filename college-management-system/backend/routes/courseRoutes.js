@@ -11,12 +11,12 @@ const { protect, authorize } = require("../middleware/authMiddleware");
 
 router
   .route("/")
-  .get(protect, getCourses)
+  .get(getCourses) // public - needed for signup forms
   .post(protect, authorize("admin"), createCourse);
 
 router
   .route("/:id")
-  .get(protect, getCourseById)
+  .get(getCourseById)
   .put(protect, authorize("admin"), updateCourse)
   .delete(protect, authorize("admin"), deleteCourse);
 

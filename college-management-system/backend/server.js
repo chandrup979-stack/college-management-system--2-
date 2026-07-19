@@ -1,62 +1,98 @@
 require("dotenv").config();
+const fs = require("fs");
+const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
 
-const authRoutes = require("./routes/authRoutes");
-const departmentRoutes = require("./routes/departmentRoutes");
-const courseRoutes = require("./routes/courseRoutes");
-const userRoutes = require("./routes/userRoutes");
-const subjectRoutes = require("./routes/subjectRoutes");
-const attendanceRoutes = require("./routes/attendanceRoutes");
-const marksRoutes = require("./routes/marksRoutes");
-
 const app = express();
 
-// Connect to MongoDB
 connectDB();
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/departments", departmentRoutes);
-app.use("/api/courses", courseRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/subjects", subjectRoutes);
-app.use("/api/attendance", attendanceRoutes);
-app.use("/api/marks", marksRoutes);
+const safeRequire = (relativePath) => {
+  const fullPath = path.join(__dirname, relativePath);
+  try {
+    if (fs.existsSync(fullPath + ".js") || fs.existsSync(fullPath)) {
+      return require(fullPath);
+    }
+  } catch (err) {
+    // fall through
+  }
+  console.warn(`Optional module not found: ${relativePath}`);
+  return null;
+};
 
-// Placeholder route to confirm server is running
+const authRoutes = safeRequire("./routes/authRoutes");
+const departmentRoutes = safeRequire("./routes/departmentRoutes");
+const courseRoutes = safeRequire("./routes/courseRoutes");
+const userRoutes = safeRequire("./routes/userRoutes");
+const subjectRoutes = safeRequire("./routes/subjectRoutes");
+const attendanceRoutes = safeRequire("./routes/attendanceRoutes");
+const marksRoutes = safeRequire("./routes/marksRoutes");
+const assignmentRoutes = safeRequire("./routes/assignmentRoutes");
+const leaveRoutes = safeRequire("./routes/leaveRoutes");
+const timetableRoutes = safeRequire("./routes/timetableRoutes");
+const announcementRoutes = safeRequire("./routes/announcementRoutes");
+const statsRoutes = require("./routes/statsRoutes");
+
+const mount = (routePath, router) => {
+  if (router) app.use(routePath, router);
+};
+
+mount("/api/auth", authRoutes);
+mount("/api/departments", departmentRoutes);
+mount("/api/courses", courseRoutes);
+mount("/api/users", userRoutes);
+mount("/api/subjects", subjectRoutes);
+mount("/api/attendance", attendanceRoutes);
+mount("/api/marks", marksRoutes);
+mount("/api/assignments", assignmentRoutes);
+mount("/api/leave", leaveRoutes);
+mount("/api/timetable", timetableRoutes);
+mount("/api/announcements", announcementRoutes);
+mount("/api/stats", statsRoutes);
+
 app.get("/", (req, res) => {
   res.send("Smart College Management System API is running...");
 });
 
-// More routes will be added here as each module is built:
-// app.use("/api/assignments", assignmentRoutes);
-// app.use("/api/leave", leaveRoutes);
-// app.use("/api/timetable", timetableRoutes);
-// app.use("/api/announcements", announcementRoutes);
-
 const PORT = parseInt(process.env.PORT, 10) || 5000;
+const net = require("net");
 
-const startServer = (port) => {
-  const server = app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
-  });
+const findFreePort = (startPort, maxAttempts = 20) => {
+  return new Promise((resolve, reject) => {
+    let port = startPort;
+    const tryListen = () => {
+      const tester = net.createServer()
+        .once("error", (err) => {
+          tester.close();
+          if (err.code === "EADDRINUSE") {
+            port += 1;
+            if (port - startPort > maxAttempts) return reject(new Error("No free ports available"));
+            return tryListen();
+          }
+          reject(err);
+        })
+        .once("listening", () => {
+          tester.close(() => resolve(port));
+        })
+        .listen(port);
+    };
 
-  server.on("error", (error) => {
-    if (error.code === "EADDRINUSE") {
-      const nextPort = port + 1;
-      console.warn(`Port ${port} is already in use. Trying port ${nextPort}...`);
-      startServer(nextPort);
-      return;
-    }
-    console.error(error);
-    process.exit(1);
+    tryListen();
   });
 };
 
-startServer(PORT);
+findFreePort(PORT)
+  .then((freePort) => {
+    app.listen(freePort, () => {
+      console.log(`Server running on http://localhost:${freePort}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Failed to find free port:", err.message || err);
+    process.exit(1);
+  });

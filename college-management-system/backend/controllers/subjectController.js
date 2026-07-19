@@ -2,14 +2,14 @@ const Subject = require("../models/Subject");
 
 const createSubject = async (req, res) => {
   try {
-    const { name, code, course, semester, faculty } = req.body;
+    const { name, code, course, year, faculty } = req.body;
 
     const exists = await Subject.findOne({ code });
     if (exists) {
       return res.status(400).json({ message: "Subject code already exists" });
     }
 
-    const subject = await Subject.create({ name, code, course, semester, faculty });
+    const subject = await Subject.create({ name, code, course, year, faculty });
     res.status(201).json(subject);
   } catch (error) {
     res.status(500).json({ message: error.message });
