@@ -24,6 +24,13 @@ const RegisterFaculty = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    const emailPattern = /@kprcaa\.ac\.in$/i;
+    if (!emailPattern.test(form.email.trim())) {
+      setError("Only email addresses ending with @kprcaa.ac.in are allowed");
+      return;
+    }
+
     try {
       const { data } = await api.post("/auth/register/faculty", form);
       login(data);
