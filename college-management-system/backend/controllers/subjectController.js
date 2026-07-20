@@ -9,7 +9,13 @@ const createSubject = async (req, res) => {
       return res.status(400).json({ message: "Subject code already exists" });
     }
 
-    const subject = await Subject.create({ name, code, course, year, faculty });
+    const subject = await Subject.create({
+      name,
+      code,
+      course: course || undefined,
+      year,
+      faculty: faculty || undefined,
+    });
     res.status(201).json(subject);
   } catch (error) {
     res.status(500).json({ message: error.message });
