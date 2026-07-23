@@ -2,7 +2,6 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const Student = require("../models/Student");
 const Faculty = require("../models/Faculty");
-const { isAllowedEmailDomain } = require("../utils/emailValidation");
 
 const createStudent = async (req, res) => {
   try {
@@ -18,10 +17,6 @@ const createStudent = async (req, res) => {
       batch,
       parentContact,
     } = req.body;
-
-    if (!isAllowedEmailDomain(email)) {
-      return res.status(400).json({ message: "Only email addresses ending with @kprcaa.ac.in are allowed" });
-    }
 
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -63,10 +58,6 @@ const createStudent = async (req, res) => {
 const createFaculty = async (req, res) => {
   try {
     const { name, email, password, phone, department, employeeId, designation } = req.body;
-
-    if (!isAllowedEmailDomain(email)) {
-      return res.status(400).json({ message: "Only email addresses ending with @kprcaa.ac.in are allowed" });
-    }
 
     const userExists = await User.findOne({ email });
     if (userExists) {

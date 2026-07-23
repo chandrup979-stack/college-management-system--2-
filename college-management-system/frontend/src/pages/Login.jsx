@@ -17,6 +17,11 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    const loginPattern = /@kprcas\.ac\.in$/i;
+    if (!loginPattern.test(String(email || "").trim())) {
+      setError("Login allowed only for @kprcas.ac.in email addresses");
+      return;
+    }
     try {
       const { data } = await api.post("/auth/login", { email, password });
 

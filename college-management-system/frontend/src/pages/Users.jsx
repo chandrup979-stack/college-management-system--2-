@@ -57,13 +57,6 @@ const Users = () => {
     e.preventDefault();
     setError("");
     setSuccess("");
-
-    const emailPattern = /@kprcaa\.ac\.in$/i;
-    if (!emailPattern.test(studentForm.email.trim())) {
-      setError("Only email addresses ending with @kprcaa.ac.in are allowed");
-      return;
-    }
-
     try {
       await api.post("/users/students", studentForm);
       setStudentForm({ ...emptyStudentForm, department: studentForm.department, course: studentForm.course });
@@ -78,13 +71,6 @@ const Users = () => {
     e.preventDefault();
     setError("");
     setSuccess("");
-
-    const emailPattern = /@kprcaa\.ac\.in$/i;
-    if (!emailPattern.test(facultyForm.email.trim())) {
-      setError("Only email addresses ending with @kprcaa.ac.in are allowed");
-      return;
-    }
-
     try {
       await api.post("/users/faculty", facultyForm);
       setFacultyForm({ ...emptyFacultyForm, department: facultyForm.department });

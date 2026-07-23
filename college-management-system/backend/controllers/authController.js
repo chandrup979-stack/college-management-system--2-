@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const Student = require("../models/Student");
 const Faculty = require("../models/Faculty");
-const { isAllowedEmailDomain } = require("../utils/emailValidation");
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -15,10 +14,6 @@ const generateToken = (id) => {
 const register = async (req, res) => {
   try {
     const { name, email, password, role, phone, department } = req.body;
-
-    if (!isAllowedEmailDomain(email)) {
-      return res.status(400).json({ message: "Only email addresses ending with @kprcaa.ac.in are allowed" });
-    }
 
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -49,10 +44,6 @@ const registerStudent = async (req, res) => {
       name, email, password, phone, department,
       rollNumber, course, year, batch, parentContact,
     } = req.body;
-
-    if (!isAllowedEmailDomain(email)) {
-      return res.status(400).json({ message: "Only email addresses ending with @kprcaa.ac.in are allowed" });
-    }
 
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -90,10 +81,6 @@ const registerFaculty = async (req, res) => {
   try {
     const { name, email, password, phone, department, employeeId, designation } = req.body;
 
-    if (!isAllowedEmailDomain(email)) {
-      return res.status(400).json({ message: "Only email addresses ending with @kprcaa.ac.in are allowed" });
-    }
-
     const userExists = await User.findOne({ email });
     if (userExists) {
       return res.status(400).json({ message: "A user with this email already exists" });
@@ -128,6 +115,10 @@ const registerFaculty = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    const loginEmailPattern = /@kprcas\.ac\.in$/i;
+    if (!loginEmailPattern.test(String(email || "").trim())) {
+      return res.status(400).json({ message: "Login allowed only for @kprcas.ac.in email addresses" });
+    }
 
     const user = await User.findOne({ email });
     if (!user) {
