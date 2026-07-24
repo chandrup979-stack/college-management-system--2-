@@ -55,7 +55,7 @@ const AppLayout = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/");
+    navigate("/login");
   };
 
   const initials = (user?.name || "?")
