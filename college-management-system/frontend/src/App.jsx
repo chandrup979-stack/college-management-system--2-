@@ -1,8 +1,7 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AppLayout from "./components/AppLayout";
-import RoleSelect from "./pages/RoleSelect";
 import Login from "./pages/Login";
 import RegisterStudent from "./pages/RegisterStudent";
 import RegisterFaculty from "./pages/RegisterFaculty";
@@ -26,7 +25,7 @@ function App() {
   return (
     <AuthProvider>
       <Routes>
-        <Route path="/" element={<RoleSelect />} />
+        <Route path="/" element={<Navigate to="/login/student" replace />} />
         <Route path="/login/:role" element={<Login />} />
         <Route path="/register/student" element={<RegisterStudent />} />
         <Route path="/register/faculty" element={<RegisterFaculty />} />
