@@ -5,6 +5,8 @@ const {
   createFaculty,
   getStudents,
   getFaculty,
+  updateStudent,
+  updateFaculty,
   deleteStudent,
   deleteFaculty,
 } = require("../controllers/userController");
@@ -20,6 +22,8 @@ router
   .get(protect, authorize("admin"), getFaculty)
   .post(protect, authorize("admin"), createFaculty);
 
+router.put("/students/:id", protect, authorize("admin"), updateStudent);
+router.put("/faculty/:id", protect, authorize("admin"), updateFaculty);
 router.delete("/students/:id", protect, authorize("admin"), deleteStudent);
 router.delete("/faculty/:id", protect, authorize("admin"), deleteFaculty);
 
