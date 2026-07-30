@@ -8,9 +8,10 @@ const ManageAssignments = () => {
     title: "",
     description: "",
     subject: "",
-    fileUrl: "",
     dueDate: "",
   });
+  const [file, setFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [viewingId, setViewingId] = useState(null);
@@ -37,12 +38,28 @@ const ManageAssignments = () => {
     e.preventDefault();
     setError("");
     setSuccess("");
+
     try {
-      await api.post("/assignments", form);
-      setForm({ title: "", description: "", subject: "", fileUrl: "", dueDate: "" });
+      let fileUrl = "";
+
+      if (file) {
+        setUploading(true);
+        const formData = new FormData();
+        formData.append("file", file);
+        const uploadRes = await api.post("/upload", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        fileUrl = uploadRes.data.url;
+        setUploading(false);
+      }
+
+      await api.post("/assignments", { ...form, fileUrl });
+      setForm({ title: "", description: "", subject: "", dueDate: "" });
+      setFile(null);
       setSuccess("Assignment created successfully");
       loadData();
     } catch (err) {
+      setUploading(false);
       setError(err.response?.data?.message || "Failed to create assignment");
     }
   };
@@ -101,13 +118,16 @@ const ManageAssignments = () => {
                 <option key={s._id} value={s._id}>{s.name} ({s.code})</option>
               ))}
             </select>
-            <input
-              type="url"
-              placeholder="File link (Google Drive, etc.)"
-              value={form.fileUrl}
-              onChange={(e) => setForm({ ...form, fileUrl: e.target.value })}
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
-            />
+
+            <div>
+              <label className="block text-xs text-slate-500 mb-1">Attach file (optional)</label>
+              <input
+                type="file"
+                onChange={(e) => setFile(e.target.files[0])}
+                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:bg-ink-900 file:text-white file:text-xs"
+              />
+            </div>
+
             <input
               type="date"
               value={form.dueDate}
@@ -117,9 +137,10 @@ const ManageAssignments = () => {
             />
             <button
               type="submit"
-              className="bg-ink-900 text-white px-4 py-2 rounded-lg hover:bg-ink-800 transition text-sm font-medium"
+              disabled={uploading}
+              className="bg-ink-900 text-white px-4 py-2 rounded-lg hover:bg-ink-800 transition text-sm font-medium disabled:opacity-50"
             >
-              Create Assignment
+              {uploading ? "Uploading..." : "Create Assignment"}
             </button>
           </form>
         </div>
@@ -140,6 +161,11 @@ const ManageAssignments = () => {
                     <p className="text-xs text-slate-500">
                       {a.submissions?.length || 0} submission(s)
                     </p>
+                    {a.fileUrl && (
+                      <a href={a.fileUrl} target="_blank" rel="noreferrer" className="text-xs text-ink-700 hover:underline">
+                        View attached file
+                      </a>
+                    )}
                   </div>
                   <div className="flex gap-2">
                     <button
