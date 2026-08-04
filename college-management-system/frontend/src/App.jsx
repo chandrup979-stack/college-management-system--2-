@@ -20,7 +20,7 @@ import ReviewLeave from "./pages/ReviewLeave";
 import ManageTimetable from "./pages/ManageTimetable";
 import ViewTimetable from "./pages/ViewTimetable";
 import NoticeBoard from "./pages/NoticeBoard";
-
+import DayOrderCalendar from "./pages/DayOrderCalendar";
 function App() {
   return (
     <AuthProvider>

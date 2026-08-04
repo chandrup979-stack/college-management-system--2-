@@ -11,6 +11,7 @@ import {
   FileText,
   CalendarDays,
   CalendarClock,
+  Calendar,
   Megaphone,
   LogOut,
   Menu,
@@ -23,6 +24,7 @@ const navConfig = [
   { to: "/users", label: "Students & Faculty", icon: Users, roles: ["admin"] },
   { to: "/subjects", label: "Subjects", icon: BookOpen, roles: ["admin"] },
   { to: "/manage-timetable", label: "Timetable", icon: CalendarClock, roles: ["admin"] },
+  { to: "/day-order-calendar", label: "Day Order Calendar", icon: Calendar, roles: ["admin"] },
 
   { to: "/mark-attendance", label: "Mark Attendance", icon: ClipboardCheck, roles: ["faculty"] },
   { to: "/enter-marks", label: "Enter Marks", icon: GraduationCap, roles: ["faculty"] },
