@@ -12,6 +12,7 @@ import {
   CalendarDays,
   CalendarClock,
   Calendar,
+  Repeat,
   Megaphone,
   LogOut,
   Menu,
@@ -25,12 +26,14 @@ const navConfig = [
   { to: "/subjects", label: "Subjects", icon: BookOpen, roles: ["admin"] },
   { to: "/manage-timetable", label: "Timetable", icon: CalendarClock, roles: ["admin"] },
   { to: "/day-order-calendar", label: "Day Order Calendar", icon: Calendar, roles: ["admin"] },
+  { to: "/manage-substitutions", label: "Substitutions", icon: Repeat, roles: ["admin"] },
 
   { to: "/mark-attendance", label: "Mark Attendance", icon: ClipboardCheck, roles: ["faculty"] },
   { to: "/enter-marks", label: "Enter Marks", icon: GraduationCap, roles: ["faculty"] },
   { to: "/manage-assignments", label: "Assignments", icon: FileText, roles: ["faculty"] },
   { to: "/review-leave", label: "Leave Requests", icon: CalendarDays, roles: ["faculty"] },
   { to: "/timetable", label: "Timetable", icon: CalendarClock, roles: ["faculty"] },
+  { to: "/my-substitutions", label: "My Substitutions", icon: Repeat, roles: ["faculty"] },
 
   { to: "/my-attendance", label: "My Attendance", icon: ClipboardCheck, roles: ["student"] },
   { to: "/my-results", label: "My Results", icon: GraduationCap, roles: ["student"] },

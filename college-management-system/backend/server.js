@@ -17,17 +17,15 @@ const announcementRoutes = require("./routes/announcementRoutes");
 const statsRoutes = require("./routes/statsRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const dayOrderRoutes = require("./routes/dayOrderRoutes");
+const substitutionRoutes = require("./routes/substitutionRoutes");
 
 const app = express();
 
-// Connect to MongoDB
 connectDB();
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/departments", departmentRoutes);
 app.use("/api/courses", courseRoutes);
@@ -42,8 +40,8 @@ app.use("/api/announcements", announcementRoutes);
 app.use("/api/stats", statsRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/dayorder", dayOrderRoutes);
+app.use("/api/substitutions", substitutionRoutes);
 
-// Placeholder route to confirm server is running
 app.get("/", (req, res) => {
   res.send("Smart College Management System API is running...");
 });

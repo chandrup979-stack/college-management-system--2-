@@ -21,6 +21,9 @@ import ManageTimetable from "./pages/ManageTimetable";
 import ViewTimetable from "./pages/ViewTimetable";
 import NoticeBoard from "./pages/NoticeBoard";
 import DayOrderCalendar from "./pages/DayOrderCalendar";
+import ManageSubstitutions from "./pages/ManageSubstitutions";
+import MySubstitutions from "./pages/MySubstitutions";
+
 function App() {
   return (
     <AuthProvider>
@@ -46,6 +49,9 @@ function App() {
           <Route path="/manage-timetable" element={<ProtectedRoute allowedRoles={["admin"]}><ManageTimetable /></ProtectedRoute>} />
           <Route path="/timetable" element={<ProtectedRoute allowedRoles={["faculty", "student"]}><ViewTimetable /></ProtectedRoute>} />
           <Route path="/notice-board" element={<ProtectedRoute><NoticeBoard /></ProtectedRoute>} />
+          <Route path="/day-order-calendar" element={<ProtectedRoute allowedRoles={["admin"]}><DayOrderCalendar /></ProtectedRoute>} />
+          <Route path="/manage-substitutions" element={<ProtectedRoute allowedRoles={["admin"]}><ManageSubstitutions /></ProtectedRoute>} />
+          <Route path="/my-substitutions" element={<ProtectedRoute allowedRoles={["faculty"]}><MySubstitutions /></ProtectedRoute>} />
         </Route>
       </Routes>
     </AuthProvider>
