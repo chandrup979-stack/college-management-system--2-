@@ -13,6 +13,7 @@ import {
   CalendarClock,
   Calendar,
   Repeat,
+  DoorOpen,
   Megaphone,
   LogOut,
   Menu,
@@ -27,6 +28,7 @@ const navConfig = [
   { to: "/manage-timetable", label: "Timetable", icon: CalendarClock, roles: ["admin"] },
   { to: "/day-order-calendar", label: "Day Order Calendar", icon: Calendar, roles: ["admin"] },
   { to: "/manage-substitutions", label: "Substitutions", icon: Repeat, roles: ["admin"] },
+  { to: "/review-outpass", label: "Out-Pass Requests", icon: DoorOpen, roles: ["admin"] },
 
   { to: "/mark-attendance", label: "Mark Attendance", icon: ClipboardCheck, roles: ["faculty"] },
   { to: "/enter-marks", label: "Enter Marks", icon: GraduationCap, roles: ["faculty"] },
@@ -34,12 +36,14 @@ const navConfig = [
   { to: "/review-leave", label: "Leave Requests", icon: CalendarDays, roles: ["faculty"] },
   { to: "/timetable", label: "Timetable", icon: CalendarClock, roles: ["faculty"] },
   { to: "/my-substitutions", label: "My Substitutions", icon: Repeat, roles: ["faculty"] },
+  { to: "/apply-outpass", label: "Out-Pass", icon: DoorOpen, roles: ["faculty"] },
 
   { to: "/my-attendance", label: "My Attendance", icon: ClipboardCheck, roles: ["student"] },
   { to: "/my-results", label: "My Results", icon: GraduationCap, roles: ["student"] },
   { to: "/my-assignments", label: "Assignments", icon: FileText, roles: ["student"] },
   { to: "/apply-leave", label: "Apply for Leave", icon: CalendarDays, roles: ["student"] },
   { to: "/timetable", label: "Timetable", icon: CalendarClock, roles: ["student"] },
+  { to: "/apply-outpass", label: "Out-Pass", icon: DoorOpen, roles: ["student"] },
 
   { to: "/notice-board", label: "Notice Board", icon: Megaphone, roles: ["admin", "faculty", "student"] },
 ];
@@ -125,33 +129,23 @@ const AppLayout = () => {
 
   return (
     <div className="min-h-screen flex bg-slate-50">
-      {/* Desktop sidebar */}
       <aside className="hidden lg:flex w-64 bg-ink-900 text-slate-200 flex-col shrink-0">
         {SidebarContent}
       </aside>
 
-      {/* Mobile off-canvas sidebar */}
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 z-40 flex">
           <div className="w-72 bg-ink-900 text-slate-200 flex flex-col">
-            <button
-              onClick={() => setMobileOpen(false)}
-              className="absolute top-5 right-4 text-slate-300"
-            >
+            <button onClick={() => setMobileOpen(false)} className="absolute top-5 right-4 text-slate-300">
               <X size={22} />
             </button>
             {SidebarContent}
           </div>
-          <div
-            className="flex-1 bg-black/40"
-            onClick={() => setMobileOpen(false)}
-          />
+          <div className="flex-1 bg-black/40" onClick={() => setMobileOpen(false)} />
         </div>
       )}
 
-      {/* Main content */}
       <div className="flex-1 min-w-0 flex flex-col">
-        {/* Mobile top bar */}
         <div className="lg:hidden flex items-center gap-3 bg-ink-900 text-white px-4 py-3 sticky top-0 z-30">
           <button onClick={() => setMobileOpen(true)}>
             <Menu size={22} />

@@ -23,6 +23,8 @@ import NoticeBoard from "./pages/NoticeBoard";
 import DayOrderCalendar from "./pages/DayOrderCalendar";
 import ManageSubstitutions from "./pages/ManageSubstitutions";
 import MySubstitutions from "./pages/MySubstitutions";
+import ApplyOutPass from "./pages/ApplyOutPass";
+import ReviewOutPass from "./pages/ReviewOutPass";
 
 function App() {
   return (
@@ -52,6 +54,8 @@ function App() {
           <Route path="/day-order-calendar" element={<ProtectedRoute allowedRoles={["admin"]}><DayOrderCalendar /></ProtectedRoute>} />
           <Route path="/manage-substitutions" element={<ProtectedRoute allowedRoles={["admin"]}><ManageSubstitutions /></ProtectedRoute>} />
           <Route path="/my-substitutions" element={<ProtectedRoute allowedRoles={["faculty"]}><MySubstitutions /></ProtectedRoute>} />
+          <Route path="/apply-outpass" element={<ProtectedRoute allowedRoles={["student", "faculty"]}><ApplyOutPass /></ProtectedRoute>} />
+          <Route path="/review-outpass" element={<ProtectedRoute allowedRoles={["admin"]}><ReviewOutPass /></ProtectedRoute>} />
         </Route>
       </Routes>
     </AuthProvider>

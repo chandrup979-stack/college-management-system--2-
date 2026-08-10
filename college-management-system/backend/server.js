@@ -18,6 +18,7 @@ const statsRoutes = require("./routes/statsRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const dayOrderRoutes = require("./routes/dayOrderRoutes");
 const substitutionRoutes = require("./routes/substitutionRoutes");
+const outPassRoutes = require("./routes/outPassRoutes");
 
 const app = express();
 
@@ -41,6 +42,7 @@ app.use("/api/stats", statsRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/dayorder", dayOrderRoutes);
 app.use("/api/substitutions", substitutionRoutes);
+app.use("/api/outpass", outPassRoutes);
 
 app.get("/", (req, res) => {
   res.send("Smart College Management System API is running...");
