@@ -15,6 +15,7 @@ import {
   Repeat,
   DoorOpen,
   Megaphone,
+  UserCircle,
   LogOut,
   Menu,
   X,
@@ -46,6 +47,7 @@ const navConfig = [
   { to: "/apply-outpass", label: "Out-Pass", icon: DoorOpen, roles: ["student"] },
 
   { to: "/notice-board", label: "Notice Board", icon: Megaphone, roles: ["admin", "faculty", "student"] },
+  { to: "/profile", label: "My Profile", icon: UserCircle, roles: ["admin", "faculty", "student"] },
 ];
 
 const AppLayout = () => {
@@ -107,7 +109,11 @@ const AppLayout = () => {
       </nav>
 
       <div className="px-4 py-4 border-t border-white/10">
-        <div className="flex items-center gap-3 mb-3">
+        <NavLink
+          to="/profile"
+          onClick={() => setMobileOpen(false)}
+          className="flex items-center gap-3 mb-3 hover:bg-white/5 rounded-lg p-1.5 -m-1.5 transition"
+        >
           <div className="w-9 h-9 rounded-full bg-gold-500 text-ink-900 font-semibold flex items-center justify-center text-sm shrink-0">
             {initials}
           </div>
@@ -115,7 +121,7 @@ const AppLayout = () => {
             <p className="text-sm font-medium text-white truncate">{user?.name}</p>
             <p className="text-xs text-slate-400 capitalize">{user?.role}</p>
           </div>
-        </div>
+        </NavLink>
         <button
           onClick={handleLogout}
           className="w-full flex items-center gap-2 justify-center text-sm bg-white/5 hover:bg-white/10 text-slate-200 rounded-lg py-2 transition"

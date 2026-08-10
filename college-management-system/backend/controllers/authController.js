@@ -10,7 +10,6 @@ const generateToken = (id) => {
   });
 };
 
-// General register (kept for admin account creation via Thunder Client/Postman)
 const register = async (req, res) => {
   try {
     const { name, email, password, role, phone, department } = req.body;
@@ -37,7 +36,6 @@ const register = async (req, res) => {
   }
 };
 
-// @route  POST /api/auth/register/student   (PUBLIC - self-registration)
 const registerStudent = async (req, res) => {
   try {
     const {
@@ -76,7 +74,6 @@ const registerStudent = async (req, res) => {
   }
 };
 
-// @route  POST /api/auth/register/faculty   (PUBLIC - self-registration)
 const registerFaculty = async (req, res) => {
   try {
     const { name, email, password, phone, department, employeeId, designation } = req.body;
@@ -115,10 +112,6 @@ const registerFaculty = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const loginEmailPattern = /@kprcas\.ac\.in$/i;
-    if (!loginEmailPattern.test(String(email || "").trim())) {
-      return res.status(400).json({ message: "Login allowed only for @kprcas.ac.in email addresses" });
-    }
 
     const user = await User.findOne({ email });
     if (!user) {
@@ -150,4 +143,50 @@ const getMe = async (req, res) => {
   res.json(req.user);
 };
 
-module.exports = { register, registerStudent, registerFaculty, login, getMe };
+// @route  PUT /api/auth/profile
+// @desc   Logged-in user updates their own name/phone
+const updateProfile = async (req, res) => {
+  try {
+    const { name, phone } = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { name, phone },
+      { new: true, runValidators: true }
+    ).select("-password");
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @route  PUT /api/auth/change-password
+// @desc   Logged-in user changes their own password
+const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    const user = await User.findById(req.user._id);
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Current password is incorrect" });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+    await user.save();
+
+    res.json({ message: "Password updated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = {
+  register,
+  registerStudent,
+  registerFaculty,
+  login,
+  getMe,
+  updateProfile,
+  changePassword,
+};
