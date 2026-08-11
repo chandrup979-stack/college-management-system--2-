@@ -30,8 +30,8 @@ connectDB();
 // Security middleware
 app.use(helmet());
 app.use(cors());
-app.use(express.json({ limit: "10kb" })); // caps request body size
-app.use(mongoSanitize()); // strips $ and . from user input to block NoSQL injection
+app.use(express.json({ limit: "10kb" }));
+app.use(mongoSanitize());
 
 // General rate limit: 300 requests per 15 min per IP, across the whole API
 const generalLimiter = rateLimit({
@@ -41,11 +41,12 @@ const generalLimiter = rateLimit({
 });
 app.use("/api", generalLimiter);
 
-// Stricter rate limit specifically on login/register: 10 attempts per 15 min per IP
+// Rate limit on login/register — generous enough for many students on shared campus WiFi,
+// while still blocking genuine brute-force attacks
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 10,
-  message: { message: "Too many login attempts, please try again in 15 minutes." },
+  max: 300,
+  message: { message: "Too many login attempts from this network, please try again in a few minutes." },
 });
 app.use("/api/auth/login", authLimiter);
 app.use("/api/auth/register", authLimiter);
