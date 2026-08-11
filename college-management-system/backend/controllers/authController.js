@@ -10,9 +10,21 @@ const generateToken = (id) => {
   });
 };
 
+const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
 const register = async (req, res) => {
   try {
     const { name, email, password, role, phone, department } = req.body;
+
+    if (!name || !email || !password || !role) {
+      return res.status(400).json({ message: "Name, email, password, and role are required" });
+    }
+    if (!isValidEmail(email)) {
+      return res.status(400).json({ message: "Please provide a valid email address" });
+    }
+    if (password.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters" });
+    }
 
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -42,6 +54,16 @@ const registerStudent = async (req, res) => {
       name, email, password, phone, department,
       rollNumber, course, year, batch, parentContact,
     } = req.body;
+
+    if (!name || !email || !password || !rollNumber) {
+      return res.status(400).json({ message: "Name, email, password, and roll number are required" });
+    }
+    if (!isValidEmail(email)) {
+      return res.status(400).json({ message: "Please provide a valid email address" });
+    }
+    if (password.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters" });
+    }
 
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -78,6 +100,16 @@ const registerFaculty = async (req, res) => {
   try {
     const { name, email, password, phone, department, employeeId, designation } = req.body;
 
+    if (!name || !email || !password || !employeeId) {
+      return res.status(400).json({ message: "Name, email, password, and employee ID are required" });
+    }
+    if (!isValidEmail(email)) {
+      return res.status(400).json({ message: "Please provide a valid email address" });
+    }
+    if (password.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters" });
+    }
+
     const userExists = await User.findOne({ email });
     if (userExists) {
       return res.status(400).json({ message: "A user with this email already exists" });
@@ -113,6 +145,10 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password are required" });
+    }
+
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
@@ -143,8 +179,6 @@ const getMe = async (req, res) => {
   res.json(req.user);
 };
 
-// @route  PUT /api/auth/profile
-// @desc   Logged-in user updates their own name/phone
 const updateProfile = async (req, res) => {
   try {
     const { name, phone } = req.body;
@@ -159,11 +193,13 @@ const updateProfile = async (req, res) => {
   }
 };
 
-// @route  PUT /api/auth/change-password
-// @desc   Logged-in user changes their own password
 const changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
+
+    if (!newPassword || newPassword.length < 6) {
+      return res.status(400).json({ message: "New password must be at least 6 characters" });
+    }
 
     const user = await User.findById(req.user._id);
     const isMatch = await bcrypt.compare(currentPassword, user.password);
