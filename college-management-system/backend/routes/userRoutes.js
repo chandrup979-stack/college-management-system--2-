@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const {
   createStudent,
+  bulkCreateStudents,
   createFaculty,
   getStudents,
   getFaculty,
@@ -16,6 +17,8 @@ router
   .route("/students")
   .get(protect, authorize("admin", "faculty"), getStudents)
   .post(protect, authorize("admin"), createStudent);
+
+router.post("/students/bulk", protect, authorize("admin"), bulkCreateStudents);
 
 router
   .route("/faculty")

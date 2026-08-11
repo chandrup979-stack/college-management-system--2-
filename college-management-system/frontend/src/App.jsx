@@ -26,6 +26,7 @@ import MySubstitutions from "./pages/MySubstitutions";
 import ApplyOutPass from "./pages/ApplyOutPass";
 import ReviewOutPass from "./pages/ReviewOutPass";
 import Profile from "./pages/Profile";
+import BulkImportStudents from "./pages/BulkImportStudents";
 
 function App() {
   return (
@@ -58,6 +59,7 @@ function App() {
           <Route path="/apply-outpass" element={<ProtectedRoute allowedRoles={["student", "faculty"]}><ApplyOutPass /></ProtectedRoute>} />
           <Route path="/review-outpass" element={<ProtectedRoute allowedRoles={["admin"]}><ReviewOutPass /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/bulk-import" element={<ProtectedRoute allowedRoles={["admin"]}><BulkImportStudents /></ProtectedRoute>} />
         </Route>
       </Routes>
     </AuthProvider>
